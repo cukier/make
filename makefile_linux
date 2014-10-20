@@ -1,0 +1,21 @@
+CC=wine Ccsc.exe
+pk2=pk2cmd
+
+DEVICE=PIC18F252
+PROJ_FILE=blink
+PROJ=Teste
+
+CFLAGS=+FH +LN -T -A -M -Z +DF +Y=9 +STDOUT +EA
+HFLAGS=+FB +LN -T -A -M -Z +DF +Y=9 +STDOUT +EA
+PK2FLAGS=-X -E -P $(DEVICE) -M -F $(PROJ_FILE).hex
+
+all: $(PROJ)
+
+$(PROJ): $(PROJ_FILE).c
+	$(CC) $(CFLAGS) $(PROJ_FILE).c
+
+Burn:
+	$(pk2) $(PK2FLAGS)
+
+clean:
+	rm *.cof *.err *.esym *.hex *.lst
