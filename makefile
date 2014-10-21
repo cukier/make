@@ -1,14 +1,16 @@
 CC=ccsc
+
+DEVICE=PIC18F252
+PROJ_FILE=blink
+PROJ=Teste
+
 CFLAGS=+FH +LN -T -A -M -Z +DF +Y=9 +STDOUT +EA
 HFLAGS=+FB +LN -T -A -M -Z +DF +Y=9 +STDOUT +EA
 
-all: Carretel Virtual
+all: $(PROJ)
 
-Carretel: carretel.c
-	$(CC) $(CFLAGS) carretel.c
-	
-Virtual: carretel_virtual.c
-#	$(CC) $(HFLAGS) carretel_virtual.c
+$(PROJ): $(PROJ_FILE).c
+	$(CC) $(CFLAGS) $(PROJ_FILE).c
 
 clean:
 	rm *.cof *.err *.esym *.hex *.lst *.pjt *.STA *.sym *.tre *.MCP *.PWI *.DBK
