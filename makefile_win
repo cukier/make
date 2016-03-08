@@ -1,32 +1,29 @@
-CC=ccsc
-PK2=pk2cmd
+CC = ccsc
+PK2 = pk2cmd
 
-DEVICE=PIC18F252
-UNIT1=Master
-UNIT1_FILE=master
-UNIT2=Slave
-UNIT2_FILE=slave
-UNIT3=Sim
-UNIT3_FILE=sim
+DEVICE = PIC18F252
+UNIT1 = PivoSim
+UNIT1_FILE = PivoSim
+SRC = src
+OUT = Debug
+
+#OBJ += *.pjt *.STA *.sym *.tre *.MCP *.PWI *.DBK
+OBJ += *.err *.esym *.xsym *.cof *.hex *.lst *.ccspjt
+MOBJ = $(OBJ:%=$(SRC)/%)
 
 HFLAGS=+FH +LN -T -A -M -Z +DF +Y=9 +STDOUT +EA
 BFLAGS=+FB +LN -T -A -M -Z +DF +Y=9 +STDOUT +EA
 MFLAGS=+FM +LN -T -A -M -Z +DF +Y=9 +STDOUT +EA
-PK2FLAGS=-E -P$(DEVICE) -M -F
+PK2FLAGS=-E -P$(DEVICE) -M -R -J -F
 
-all: $(UNIT1) $(UNIT2) $(UNIT3)
+all: $(UNIT1).hex
 
-$(UNIT1): $(UNIT1_FILE).c
-	$(CC) $(HFLAGS) $(UNIT1_FILE).c
+$(UNIT1).hex: $(SRC)/$(UNIT1_FILE).c
+	$(CC) $(HFLAGS) $< 
+	mv $(MOBJ) $(OUT)
 	
-$(UNIT2): $(UNIT2_FILE).c
-	$(CC) $(HFLAGS) $(UNIT2_FILE).c
+burn: $(OUT)/$(UNIT1_FILE).hex
+	$(PK2) $(PK2FLAGS) $^
 	
-$(UNIT3): $(UNIT3_FILE).c
-	$(CC) $(MFLAGS) $(UNIT3_FILE).c
-	
-Burn:
-	$(PK2) $(PK2FLAGS) $(UNIT1_FILE).hex
-
 clean:
-	rm *.cof *.err *.esym *.hex *.lst *.pjt *.STA *.sym *.tre *.MCP *.PWI *.DBK
+	rm $(OUT)/*
